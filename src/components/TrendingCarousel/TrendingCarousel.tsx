@@ -3,11 +3,11 @@
 const TrendingCarousel = ({trendingArray}:any):JSX.Element => {
   console.log(trendingArray)
   return (
-    <div>
+    <div className="d-flex">
       {trendingArray?.results?.length && trendingArray.results.map((gifData:any) => {
         return (
           <>
-            <img src={gifData.media[0].gif.url} width={200} />
+            <img src={gifData.media[0].gif.url} height={100} />
           </>
         )
       })}

@@ -10,9 +10,25 @@ interface TenorIndexInputField {
 }
 
 
+export const viewportSize = (): number => {
+  const [width, setWidth] = useState<number>(0);
+  useEffect(() => {
+    const updateWidth = () => {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener('resize',updateWidth);
+    updateWidth();
+    return (() => window.removeEventListener('resize',updateWidth));
+  });
+  return width;
+};
+
+
 
 const TenorIndex = ():JSX.Element => {
 
+  const width = viewportSize();
+  console.log(width);
   // const [inputFields,setInputFields] = useState<TenorIndexInputField>({searchValue:''});
   const [searchResult, setSearchResult] = useState<any>();
   const [trending, setTrending]= useState<any>();
@@ -35,7 +51,7 @@ const TenorIndex = ():JSX.Element => {
 
   useEffect(() => {
     fetchTrendingTenorSearches();
-  },[])
+  },[]);
 
   return (
     <div className = 'container'>
@@ -43,9 +59,11 @@ const TenorIndex = ():JSX.Element => {
       {/* <input value={inputFields.searchValue} onChange={handleSearchValue} name='searchValue'/>
       <button className='btn' onClick={handleSearch}>CLICK TO SEARCH</button> */}
       <TrendingCarousel trendingArray={trending}/>
-      <PresentGIF datas = {searchResult}/>
+      <PresentGIF datas = {searchResult} viewportSize = {width}/>
     </div>
   )
 }
+
+
 
 export default TenorIndex;
