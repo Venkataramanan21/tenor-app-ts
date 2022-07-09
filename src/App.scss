@@ -1,0 +1,8 @@
+@use '@styles/var.scss' as var;
+.container {
+  // @include var.for-mobile {
+
+  // }
+  width: 90%;
+  margin: auto;
+}
