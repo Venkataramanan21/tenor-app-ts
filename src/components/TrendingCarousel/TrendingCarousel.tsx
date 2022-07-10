@@ -7,7 +7,7 @@ const TrendingCarousel = ({trendingArray}:any):JSX.Element => {
       {trendingArray?.length && trendingArray.map((gifData:any, index:number) => {
         return (
           <div key = {index} className = 'w-25 p-2'>
-            <img src={gifData.media[0].gif.url} height={100} className='rounded'/>
+            <img src={gifData.media[0].tinygif.url} height={100} className='rounded'/>
           </div>
         )
       })}

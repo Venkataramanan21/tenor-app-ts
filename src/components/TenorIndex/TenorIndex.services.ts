@@ -4,7 +4,6 @@ import { GIFTrendingSearchTerms, GIFSearchEndpoint, GIFTrendingEndpoint } from "
 //   // console.log(payload)
 //  fetch(GIFSearchEndpoint).then((val) => console.log(val.json(),'is the final value')).catch((e:Error) => console.log(e,'This is the error'));
 // }
-
 export async function searchGIF(payload: string) {
   const parameters = `?q=${payload}&key=LIVDSRZULELA&limit=50`
   const url = GIFSearchEndpoint+parameters;
@@ -26,9 +25,9 @@ export async function trendingTenorSearches() {
 
 export async function fetchNextSet(previousArray:any,payload: string,next:any) {
   console.log(previousArray,'HERE IS THE PROVIOUS ARAY')
-    const parameters = `?q=${payload}&key=LIVDSRZULELA&limit=50&next=${next}`
+    const parameters = `?q=${payload}&key=LIVDSRZULELA&limit=50&pos=${next}`
     const url = GIFSearchEndpoint+parameters;
     const response = await fetch(url).then((val) => {return val.json()});
-    response.result = [...previousArray,...response.result]
+    // response.result = [...previousArray,...response.result]
     return response;
   }

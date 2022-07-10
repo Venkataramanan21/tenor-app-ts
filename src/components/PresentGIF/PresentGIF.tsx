@@ -18,7 +18,7 @@ const PresentGIF = ({datas, viewportSize, triggerNext}:any):JSX.Element => {
       if (element) {
         if(window.scrollY+window.outerHeight+300 > element.clientHeight) {
           // console.log('WINDOW IS ','I can trigger right?')
-          trigger();
+          // trigger();
         }
       }
     }
@@ -43,7 +43,7 @@ const PresentGIF = ({datas, viewportSize, triggerNext}:any):JSX.Element => {
           {
           val.map((innerVal:any,index:number) => (
             // <Suspense key={index} fallback = {<h4 style={{height:'300px'}}>Loading</h4>}>
-              <GIFComp key={index} src={innerVal.media[0].gif.url}/>
+              <GIFComp key={index} src={innerVal}/>
             // </Suspense>
           ))
 }
