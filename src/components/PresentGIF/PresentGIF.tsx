@@ -1,13 +1,13 @@
 import GIFComp from "./../MediaComp/GIFComp";
 import Loader from "./../Loader/Loader";
 
-const PresentGIF = ({datas, viewportSize, triggerNext}:any):JSX.Element => {
+const PresentGIF = ({datas, viewportSize}:any):JSX.Element => {
 
   const noRows = findNoOfRows(viewportSize);
   const splitedVal = splitData(datas,noRows).filter((arr:any[]) => arr?.length);
   
   return (
-    <div id='gif-container' className='d-flex'>
+    <div id='gif-container' className='d-flex' style={{cursor:'hover'}}>
       {Boolean(splitedVal.length) && splitedVal.map((val:any,indexParent:number) => (
         <div key = {indexParent} className='d-flex flex-column col'>
           {

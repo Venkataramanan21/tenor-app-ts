@@ -29,24 +29,17 @@ export const viewportSize = (): number => {
 
 
 const TenorIndex = ():JSX.Element => {
-  // console.log('NotFound',props)
   const params = useParams()
   const location = useLocation();
   const width = viewportSize();
-  // const [inputFields,setInputFields] = useState<TenorIndexInputField>({searchValue:''});
   const [searchResult, setSearchResult] = useState<any>([]);
   const [trending, setTrending]= useState<any>();
   const [nextSearch, setNextSearch] = useState<any>('');
   const [isFetching,setIsFetching] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  // const handleSearchValue = (e:React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log(e.target.value);
-  //   setInputFields({...inputFields,[e.target.name]:e.target.value})
-  // }
-
   const handleSearch = async (value:string) => {
-    navigate(`/search/${value.replaceAll('%20','')}`);
+    navigate(`/search/${value.replaceAll(' ','-')}`);
   }
 
   const handleInitailSearch = async (value:string) => {
@@ -58,18 +51,11 @@ const TenorIndex = ():JSX.Element => {
     setIsFetching(false);
   }
 
-  const handleNextAPI = async () => {
-    setIsFetching(true);
-    const a = fetchNextSet(searchResult,params?.searchTerm ?? '',nextSearch);
-    setIsFetching(false);
-  }
-
-
   const fetchTrendingTenorSearches = async () => {
     const result = await trendingGIF();
     setTrending(result?.results);
-    // setSearchResult(result);
   }
+
   useEffect(() => {
     const path = location.pathname.split('/');
     const searchTerm=params?.searchTerm?.replaceAll('%20',' ');
@@ -97,15 +83,15 @@ const TenorIndex = ():JSX.Element => {
     <div className = 'container' >
       <SearchComponent handleSearch={handleSearch}/>
       <h3 className="fw-bold">Trending Searches</h3>
-      <TrendingCarousel trendingArray={trending}/>
+      <TrendingCarousel trendingArray={trending} handleSearch={handleSearch} width={width}/>
       <h3 className="my-3 fw-bold">Featured GIFs</h3>
-      <InfiniteScroll
-        loadMore={loadMoreData}
-        hasMore={!isFetching}
-        loader={<Loader className='m-auto'/>}
-        useWindow={true}
-        >
-        <PresentGIF datas = {searchResult} viewportSize = {width} triggerNext={handleNextAPI}/>
+        <InfiniteScroll
+          loadMore={loadMoreData}
+          hasMore={!isFetching}
+          loader={<Loader className='m-auto'/>}
+          useWindow={true}
+          >
+        <PresentGIF datas = {searchResult} viewportSize = {width}/>
     </InfiniteScroll>
     </div>
     </div>

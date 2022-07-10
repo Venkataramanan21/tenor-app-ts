@@ -25,3 +25,10 @@ export async function fetchNextSet(previousArray:any,payload: string,next:any) {
     const response = await fetch(url).then((val) => {return val.json()});
     return response;
   }
+
+export async function fetchSingleValue(payload: string) {
+    const parameters = `?q=${payload}&key=LIVDSRZULELA&limit=1`
+    const url = GIFSearchEndpoint+parameters;
+    const response = await fetch(url).then((val) => {return val.json()});
+    return response;
+  }
