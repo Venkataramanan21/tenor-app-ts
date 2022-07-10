@@ -1,14 +1,32 @@
 // import Styles from './PresentGIF.module.scss';
 
-const PresentGIF = ({datas, viewportSize}:any):JSX.Element => {
+// import GIFComp from "@components/MediaComp/GIFComp";
+import GIFComp from "./../MediaComp/GIFComp";
+import { useEffect } from 'react';
+// const GIFComp = lazy(() => import('./../MediaComp/GIFComp'));
+
+const PresentGIF = ({datas, viewportSize, triggerNext}:any):JSX.Element => {
 
   const noRows = findNoOfRows(viewportSize);
   // const allCompiledData;
-  console.log(noRows,viewportSize)
-  const splitedVal = splitData(datas?.results,noRows);
+  const splitedVal = splitData(datas,noRows).filter((arr:any[]) => arr?.length);
+  useEffect(() => {
+    const sizeOfTheScreen = () => {
+      // const element = document.getElementById('gif-container');
+      const element = document.querySelector('body');
+      const trigger = () => triggerNext();
+      if (element) {
+        if(window.scrollY+window.outerHeight+300 > element.clientHeight) {
+          // console.log('WINDOW IS ','I can trigger right?')
+          trigger();
+        }
+      }
+    }
+    document.addEventListener('scroll',sizeOfTheScreen)
+  },[])
   
   return (
-    <div className='d-flex'>
+    <div id='gif-container' className='d-flex'>
       {/* {datas?.results?.length && datas.results.map((gifData:any,index:number) => {
         return (
           <>
@@ -24,11 +42,9 @@ const PresentGIF = ({datas, viewportSize}:any):JSX.Element => {
         <div key = {indexParent} className='d-flex flex-column col'>
           {
           val.map((innerVal:any,index:number) => (
-            <>
-            <div key = {index} className='p-2 d-inline-block'>
-              <img src={innerVal.media[0].gif.url} width={200} />
-            </div>
-          </>
+            // <Suspense key={index} fallback = {<h4 style={{height:'300px'}}>Loading</h4>}>
+              <GIFComp key={index} src={innerVal.media[0].gif.url}/>
+            // </Suspense>
           ))
 }
         </div>
@@ -43,7 +59,6 @@ const splitData = (allData:any[],rows:number) => {
   const heightArr = [];
   for (let i=0;i<allData.length;i=i+rows) {
     const tempArr = allData.slice(i,i+rows)
-    console.log(tempArr,rows)
     for (let j=0;j<rows;j++) {
       // arr[j]=[...arr[j],tempArr[j]];
       tempArr[j] && arr[j].push(tempArr[j]);

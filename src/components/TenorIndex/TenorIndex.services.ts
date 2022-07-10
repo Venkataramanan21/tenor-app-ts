@@ -23,3 +23,12 @@ export async function trendingTenorSearches() {
   const response = await fetch(url).then((val) => {return val.json()});
   return response;
 }
+
+export async function fetchNextSet(previousArray:any,payload: string,next:any) {
+  console.log(previousArray,'HERE IS THE PROVIOUS ARAY')
+    const parameters = `?q=${payload}&key=LIVDSRZULELA&limit=50&next=${next}`
+    const url = GIFSearchEndpoint+parameters;
+    const response = await fetch(url).then((val) => {return val.json()});
+    response.result = [...previousArray,...response.result]
+    return response;
+  }
