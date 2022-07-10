@@ -1,16 +1,16 @@
 /* eslint-disable react/react-in-jsx-scope */
-import React, {useEffect, useState } from "react";
-// import { Router } from "react-router";
+import {useEffect, useState } from "react";
 import PresentGIF from "../PresentGIF/PresentGIF";
 import SearchComponent from "../SearchComponent/SearchComponent";
 import TrendingCarousel from "../TrendingCarousel/TrendingCarousel";
 import { fetchNextSet, searchGIF, trendingGIF, trendingTenorSearches } from "./TenorIndex.services";
 import { useNavigate, useLocation, useParams } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroller';
+import Loader from "../Loader/Loader";
 
-interface TenorIndexInputField {
-  searchValue: string;
-}
+// interface TenorIndexInputField {
+//   searchValue: string;
+// }
 
 
 export const viewportSize = (): number => {
@@ -28,7 +28,7 @@ export const viewportSize = (): number => {
 
 
 
-const TenorIndex = (props:any):JSX.Element => {
+const TenorIndex = ():JSX.Element => {
   // console.log('NotFound',props)
   const params = useParams()
   const location = useLocation();
@@ -46,7 +46,7 @@ const TenorIndex = (props:any):JSX.Element => {
   // }
 
   const handleSearch = async (value:string) => {
-    navigate(`/search/${value}`);
+    navigate(`/search/${value.replaceAll('%20','')}`);
   }
 
   const handleInitailSearch = async (value:string) => {
@@ -82,10 +82,8 @@ const TenorIndex = (props:any):JSX.Element => {
       fetchTrendingTenorSearches();
     }
   },[params]);
-  
   const loadMoreData = async () => {
     const a = await fetchNextSet(searchResult,params?.searchTerm ?? '',nextSearch);
-    console.log('LOAD MORE DATA')
     setIsFetching(true);
     if(a?.results?.length >10) {
       setSearchResult([...searchResult,...a.results]);
@@ -93,26 +91,23 @@ const TenorIndex = (props:any):JSX.Element => {
       setIsFetching(false);
     }
   }
-  console.log(searchResult);
 
   return (
-    <div className = 'container' style = {{height:'100vh',overflow:'auto'}}>
-      {/* {isNotFoundPage && <div>Page does not exist</div>} */}
+    <div>
+    <div className = 'container' >
       <SearchComponent handleSearch={handleSearch}/>
-      {/* <input value={inputFields.searchValue} onChange={handleSearchValue} name='searchValue'/>
-      <button className='btn' onClick={handleSearch}>CLICK TO SEARCH</button> */}
+      <h3 className="fw-bold">Trending Searches</h3>
       <TrendingCarousel trendingArray={trending}/>
-      {/* <div style = {{height:'700px'}}> */}
+      <h3 className="my-3 fw-bold">Featured GIFs</h3>
       <InfiniteScroll
-        pageStart={0}
         loadMore={loadMoreData}
         hasMore={!isFetching}
-        loader={<div className="loader" key={0}>Loading ...</div>}
-        useWindow={false}
+        loader={<Loader className='m-auto'/>}
+        useWindow={true}
         >
         <PresentGIF datas = {searchResult} viewportSize = {width} triggerNext={handleNextAPI}/>
     </InfiniteScroll>
-    {/* </div> */}
+    </div>
     </div>
   )
 }
