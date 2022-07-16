@@ -1,0 +1,18 @@
+.gifView {
+  padding: 8px;
+  .hoverBox {
+    transition: all 0.5s;
+    min-height:100px;
+    &:hover {
+      scale: 1.05;
+      cursor: pointer;
+    }
+  }
+}
+@media only screen and (max-width: 600px) {
+  .gifView{
+    .hoverBox{
+      min-height: 50px;
+    }
+  }
+}

@@ -7,11 +7,11 @@
       "esnext"
     ],
     "baseUrl": ".",
-    "paths": {
-      "@styles/*": ["src/styles/*"],
-      "@components/*": ["src/components/*"],
-      "@util/*": ["src/utilities/*"]
-    },
+    // "paths": {
+    //   "@styles/*": ["src/styles/*"],
+    //   "@components/*": ["src/components/*"],
+    //   "@util/*": ["src/utilities/*"]
+    // },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

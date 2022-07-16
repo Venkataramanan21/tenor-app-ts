@@ -1,9 +1,17 @@
 @use '@styles/var.scss' as var;
 .container {
-  // @include var.for-mobile {
-
-  // }
   padding-top: 100px;
-  width: 90%;
   margin: auto;
+}
+
+.carousel {
+  .carousel-control-prev {
+    width:30px;
+  }
+  .carousel-control-next {
+    width: 30px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
 }

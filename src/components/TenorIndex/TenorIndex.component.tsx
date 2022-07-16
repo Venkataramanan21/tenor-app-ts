@@ -1,15 +1,16 @@
 /* eslint-disable react/react-in-jsx-scope */
-import React, {useEffect, useState } from "react";
-// import { Router } from "react-router";
+import {useEffect, useState } from "react";
 import PresentGIF from "../PresentGIF/PresentGIF";
 import SearchComponent from "../SearchComponent/SearchComponent";
 import TrendingCarousel from "../TrendingCarousel/TrendingCarousel";
 import { fetchNextSet, searchGIF, trendingGIF, trendingTenorSearches } from "./TenorIndex.services";
 import { useNavigate, useLocation, useParams } from 'react-router';
+import InfiniteScroll from 'react-infinite-scroller';
+import Loader from "../Loader/Loader";
 
-interface TenorIndexInputField {
-  searchValue: string;
-}
+// interface TenorIndexInputField {
+//   searchValue: string;
+// }
 
 
 export const viewportSize = (): number => {
@@ -27,46 +28,34 @@ export const viewportSize = (): number => {
 
 
 
-const TenorIndex = (props:any):JSX.Element => {
-  // console.log('NotFound',props)
+const TenorIndex = ():JSX.Element => {
   const params = useParams()
   const location = useLocation();
-  console.log(location)
   const width = viewportSize();
-  // const [inputFields,setInputFields] = useState<TenorIndexInputField>({searchValue:''});
   const [searchResult, setSearchResult] = useState<any>([]);
   const [trending, setTrending]= useState<any>();
   const [nextSearch, setNextSearch] = useState<any>('');
+  const [isFetching,setIsFetching] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  // const handleSearchValue = (e:React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log(e.target.value);
-  //   setInputFields({...inputFields,[e.target.name]:e.target.value})
-  // }
-
   const handleSearch = async (value:string) => {
-    navigate(`/search/${value}`);
+    navigate(`/search/${value.replaceAll(' ','-')}`);
   }
 
   const handleInitailSearch = async (value:string) => {
     setSearchResult([]);
+    setIsFetching(true);
     const result = await searchGIF(value);
     setNextSearch(result?.next);
     setSearchResult(result?.results);
+    setIsFetching(false);
   }
-
-  const handleNextAPI = async () => {
-    const a = fetchNextSet(searchResult,params?.searchTerm ?? '',nextSearch);
-    console.log(nextSearch,'What do you understand?')
-  }
-
-  console.log(nextSearch)
 
   const fetchTrendingTenorSearches = async () => {
     const result = await trendingGIF();
     setTrending(result?.results);
-    // setSearchResult(result);
   }
+
   useEffect(() => {
     const path = location.pathname.split('/');
     const searchTerm=params?.searchTerm?.replaceAll('%20',' ');
@@ -79,15 +68,32 @@ const TenorIndex = (props:any):JSX.Element => {
       fetchTrendingTenorSearches();
     }
   },[params]);
+  const loadMoreData = async () => {
+    const a = await fetchNextSet(searchResult,params?.searchTerm ?? '',nextSearch);
+    setIsFetching(true);
+    if(a?.results?.length >10) {
+      setSearchResult([...searchResult,...a.results]);
+      setNextSearch(a.next);
+      setIsFetching(false);
+    }
+  }
 
   return (
-    <div className = 'container'>
-      {/* {isNotFoundPage && <div>Page does not exist</div>} */}
+    <div>
+    <div className = 'container' >
       <SearchComponent handleSearch={handleSearch}/>
-      {/* <input value={inputFields.searchValue} onChange={handleSearchValue} name='searchValue'/>
-      <button className='btn' onClick={handleSearch}>CLICK TO SEARCH</button> */}
-      <TrendingCarousel trendingArray={trending}/>
-      <PresentGIF datas = {searchResult} viewportSize = {width} triggerNext={handleNextAPI}/>
+      <h3 className="fw-bold">Trending Searches</h3>
+      <TrendingCarousel trendingArray={trending} handleSearch={handleSearch} width={width}/>
+      <h3 className="my-3 fw-bold">Featured GIFs</h3>
+        <InfiniteScroll
+          loadMore={loadMoreData}
+          hasMore={!isFetching}
+          loader={<Loader className='m-auto'/>}
+          useWindow={true}
+          >
+        <PresentGIF datas = {searchResult} viewportSize = {width}/>
+    </InfiniteScroll>
+    </div>
     </div>
   )
 }
