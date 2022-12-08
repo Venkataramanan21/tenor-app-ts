@@ -12,3 +12,5 @@ Search can be done in the search field provided in the home page in the search i
 Trending bar is present at the top with the carousel, used for rapid search of trending queries by click.
 
 Lazy loading is added in this project for the pagination process which gets image and manage the flow with a reduced sluggish feel.
+
+Project is running live at: https://tenor-react.web.app/search/
